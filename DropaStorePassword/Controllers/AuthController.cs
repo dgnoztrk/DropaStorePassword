@@ -1,4 +1,5 @@
 ﻿using DropaStorePassword.Data;
+using DropaStorePassword.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,18 +22,20 @@ namespace DropaStorePassword.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> GetToken(string Email, string password)
+        public async Task<IActionResult> GetToken(LoginViewModel model)
         {
-            var _user = await _db.Users.FirstOrDefaultAsync(x => x.Email == Email);
+            var _user = await _db.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == model.Email);
             if (_user != null)
             {
                 var hasher = new PasswordHasher<AppUser>();
-                var hashpw = hasher.VerifyHashedPassword(_user, _user.PasswordHash!, password);
+                var hashpw = hasher.VerifyHashedPassword(_user, _user.PasswordHash!, model.Password);
                 if (hashpw == PasswordVerificationResult.Success)
                 {
                     return Ok(CreateToken(_user));
                 }
             }
+            //HttpContext.Response.StatusCode = 500;
+            //throw new Exception("E-posta veya şifre hatalı !");
             return BadRequest("E-posta veya şifre hatalı !");
         }
 

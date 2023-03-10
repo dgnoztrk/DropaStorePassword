@@ -61,7 +61,13 @@ builder.Services.AddAuthentication(options =>
 
 });
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors();
+//builder.Services.AddCors();
+builder.Services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+{
+    builder.AllowAnyOrigin()
+           .AllowAnyMethod()
+           .AllowAnyHeader();
+}));
 
 var app = builder.Build();
 
@@ -72,6 +78,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("MyPolicy");
 
 app.UseAuthentication();
 

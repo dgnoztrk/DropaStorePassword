@@ -1,6 +1,7 @@
 ﻿using DropaStorePassword.Data;
 using DropaStorePassword.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ namespace DropaStorePassword.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+    [EnableCors("MyPolicy")]
     public class PasswordController : ControllerBase
     {
         private readonly DB _db;
